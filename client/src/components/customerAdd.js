@@ -52,7 +52,6 @@ class CustomerAdd extends React.Component {
       fileName: "",
       open: false,
     }); // 값 주고나서 다시 초기화
-    window.location.reload();
   };
 
   handleFileChange = (e) => {

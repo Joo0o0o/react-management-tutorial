@@ -30,6 +30,7 @@ const styles = (theme) => ({
 
 class App extends Component {
   constructor(props) {
+    //생성자
     super(props);
     this.state = {
       customers: "",
@@ -38,11 +39,12 @@ class App extends Component {
   }
 
   stateRefresh = () => {
+    // state를 초기화한다
     this.setState({
       customers: "",
       completed: 0,
     });
-    this.callApi()
+    this.callApi() //고객데이터 불러오기
       .then((res) => this.setState({ customers: res }))
       .catch((err) => console.log(err));
   };
