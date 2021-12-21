@@ -27,16 +27,19 @@ const connection = mysql.createConnection({
 connection.connect();
 // 데이터 불러오기
 app.get("/api/customers", (req, res) => {
-  connection.query("SELECT * FROM customer", (err, rows, fields) => {
-    res.send(rows);
-  });
+  connection.query(
+    "SELECT * FROM customer where isDeleted = 0",
+    (err, rows, fields) => {
+      res.send(rows);
+    }
+  );
 });
 
 //접근가능하게해줌
 app.use("/image", express.static("./upload"));
 // 주소, express를 통한 접근
 app.post("/api/customers", upload.single("image"), (req, res) => {
-  let sql = "INSERT INTO customer VALUES (null, ?, ?, ?, ?, ?)";
+  let sql = "INSERT INTO customer VALUES (null, ?, ?, ?, ?, ?, now(), 0)";
   let image = "/image/" + req.file.filename; // multer가 파일이름 안겹치게 만들어줌
   let name = req.body.name;
   let birthday = req.body.birthday;
@@ -51,3 +54,12 @@ app.post("/api/customers", upload.single("image"), (req, res) => {
 });
 
 app.listen(port, () => console.log(`listening on port ${port}`));
+
+app.delete("/api/customers/:id", (req, res) => {
+  let sql = "UPDATE customer SET isDeleted = 1 WHERE id = ?";
+  let params = [req.params.id];
+  connection.query(sql, params, (err, rows, fields) => {
+    res.send(rows);
+    console.log(err);
+  });
+});
